@@ -3,15 +3,13 @@
 1d0	!t-hopping
 F	!PPPflag
 T	!hubbardflag
-NCE	!hoppingflag
-T	!SOCflag
-T	!SOCtot
-F	!SOCzflag
+N	!hoppingflag
+F	!SOCflag
+F	!SOCtot
 F	!socmono
-3	!multiply
+0	!multiply
 T	!GSflag T=si GS F= no GS
-10.d0	-4.0d0  2
+10.0d0	-4.0d0  2
 10.d0	-0.0d0	1
 10.d0	+0.0d0	1
 10.d0	+4.0d0	0
- 

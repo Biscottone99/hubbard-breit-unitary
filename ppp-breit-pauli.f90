@@ -288,8 +288,9 @@ program vb
      num_rot(:,:,i) = temp_out(:,:)
   enddo
   deallocate(temp_inp, temp_out)
-  call rotate_cplx_2x2(dim, sdr, spinpol, hamiltonian)
-
+  !call rotate_cplx_2x2(dim, sdr, spinpol, hamiltonian)
+  sdr = 0d0
+  sdr = (num_rot(:,:,nso-1)-num_rot(:,:,nso))-(num_rot(:,:,1)-num_rot(:,:,2))
 
 !!$  allocate(hopdr(dim,dim), hopar(dim,dim))
 !!$  hopdr=0d0
@@ -350,12 +351,12 @@ program vb
   do i = 1, dim
      write(11,'(I2, 2x, <3>(f10.5, 2x),E10.2)') i, eigenvalue(i), dreal(sqrot(i,i)), dreal(szrot(i,i)),(dreal(sdr(i,i)))
   enddo
-    stop
+    
   !=========================REDFIELD===========================================================================================================================================================================
   allocate(psi0(dim))
   do i = 1, dim
-    ! psi0(i)=muzrot(1,i) !sbagliato
-     psi0(i)=muzrot(i,1)
+     psi0(i)=muzrot(1,i) !sbagliato
+    ! psi0(i)=muzrot(i,1)
   enddo
   norm=0.d0
   do i=1,dim
@@ -426,7 +427,7 @@ program vb
   endif
 
 
-
+ 
   if(gslabel)then
      open(66,file='unitary/rho.bin',form="unformatted", access='stream')
      write(66) denmat
@@ -437,9 +438,9 @@ program vb
      open(66,file='unitary/eigen.bin',form="unformatted", access='stream')
      write(66) eigenvalue(1:dim)
      close(66)
-     open(66)
-     write(66) sqrot(1:dim,1:dim)
-     close(66)
+!!$     open(66)
+!!$     write(66) sqrot(1:dim,1:dim)
+!!$     close(66)
 !!$     open(88,file='unitary/psi0.bin',form="unformatted")
 !!$     write(88) psi0(1:dim)
 !!$     close(88)

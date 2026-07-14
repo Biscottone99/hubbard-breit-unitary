@@ -546,7 +546,7 @@ subroutine dipole_moment(dipole, carica, nuclei, dim2, nsiti)
     integer, intent(in) :: vecconfig(dim2)
     complex*16, intent(in) :: pf
     complex*16, intent(out) :: coup(dim2, dim2)
-    complex*16 :: coupx(dim2,dim2), coupy(dim2,dim2), coupz(dim2,dim2)
+    complex*16, allocatable:: coupx(:,:), coupy(:,:), coupz(:,:)
     integer :: i, j, k, isito, sitoi, sitoj, si, sj, nso
     complex*16 :: mom(nsiti, nsiti, 3)
     complex*16,allocatable:: soc_a(:,:,:), soc_b(:,:,:), soc_mono(:,:,:), hamsoc(:,:), tbcoupx(:,:), tbcoupy(:,:), tbcoupz(:,:)
@@ -718,6 +718,7 @@ subroutine dipole_moment(dipole, carica, nuclei, dim2, nsiti)
 
 
     ! Calculate coup
+   allocate (coupx(dim2, dim2), coupy(dim2,dim2), coupz(dim2,dim2))
     coup = 0.0d0
     call sq_oe_op_compl(nso, dim2, hamsoc, coup, vecconfig)
     call check_hermitian(coup, dim2, is_hermitian)
@@ -750,7 +751,7 @@ subroutine dipole_moment(dipole, carica, nuclei, dim2, nsiti)
     integer, intent(in) :: vecconfig(dim2)
     complex*16, intent(in) :: pf
     complex*16, intent(out) :: sso(dim2, dim2)
-    complex*16 :: ssox(dim2, dim2), ssoy(dim2, dim2), ssoz(dim2, dim2)
+    complex*16, allocatable :: ssox(:,:), ssoy(:,:), ssoz(:,:)
 
     complex*16,allocatable:: hssotb(:,:,:,:,:), ssotb(:,:,:,:), ppso(:,:,:),ssotbx(:,:,:,:),ssotby(:,:,:,:),ssotbz(:,:,:,:), hssotb2(:,:,:,:,:)
     complex*16 ::  spin(2, 2, 3), cplx, vec1(3), vec2(3), cp(3), cp2(3)
@@ -889,6 +890,7 @@ subroutine dipole_moment(dipole, carica, nuclei, dim2, nsiti)
 
     ! Initialize and calculate sso
     sso = 0.0d0
+    allocate (ssox(dim2,dim2), ssoy(dim2,dim2), ssoz(dim2,dim2))
     call bielectron(dim2, nso, pf, vecconfig, ssotb, sso)
     call bielectron(dim2, nso, pf, vecconfig, ssotbx, ssox)
     call bielectron(dim2, nso, pf, vecconfig, ssotby, ssoy)
@@ -915,7 +917,8 @@ subroutine dipole_moment(dipole, carica, nuclei, dim2, nsiti)
     real*8, intent(in) :: nuclei(nsiti, 3), hop(nsiti,nsiti)
     complex*16, intent(in) :: pf
     integer, intent(in) :: vecconfig(dim2)
-    complex*16 :: soo(dim2, dim2), soox(dim2,dim2), sooy(dim2,dim2), sooz(dim2,dim2)
+    complex*16, intent(out) :: soo(dim2, dim2)
+    complex*16,allocatable::soox(:,:), sooy(:,:), sooz(:,:)
 
     complex*16, allocatable:: hsootb(:,:,:,:,:), sootb(:,:,:,:), ppso(:,:,:), check(:,:),  conj_transpose_matrix(:, :, :, :), hsootb2(:,:,:,:,:)
     complex*16,allocatable::sootbx(:,:,:,:),sootby(:,:,:,:),sootbz(:,:,:,:)
@@ -1086,9 +1089,9 @@ subroutine dipole_moment(dipole, carica, nuclei, dim2, nsiti)
           end do
        enddo
     enddo
-    bool = all(zabs(sootb - conj_transpose_matrix).le.1d-8)
-    IF(bool)write(*,*) 'SOOTB hermitian'
+   
     ! Initialize and calculate soo
+    allocate(soox(dim2,dim2), sooy(dim2,dim2), sooz(dim2,dim2))
     soo = 0.0d0
     soox = 0d0
     sooy = 0d0
